@@ -1,0 +1,12 @@
+{
+  "domain": "pinergy",
+  "name": "Pinergy",
+  "codeowners": ["@Irishsmurf"],
+  "config_flow": true,
+  "dependencies": ["recorder"],
+  "documentation": "https://www.home-assistant.io/integrations/pinergy",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "loggers": ["pypinergy"],
+  "requirements": ["pypinergy==1.2.0"]
+}

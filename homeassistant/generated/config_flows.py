@@ -579,6 +579,7 @@ FLOWS = {
         "pi_hole",
         "picnic",
         "picotts",
+        "pinergy",
         "ping",
         "pjlink",
         "plaato",

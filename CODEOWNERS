@@ -1372,6 +1372,8 @@ CLAUDE.md @home-assistant/core
 /tests/components/picnic/ @corneyl @codesalatdev
 /homeassistant/components/picotts/ @rooggiieerr
 /tests/components/picotts/ @rooggiieerr
+/homeassistant/components/pinergy/ @Irishsmurf
+/tests/components/pinergy/ @Irishsmurf
 /homeassistant/components/ping/ @jpbede
 /tests/components/ping/ @jpbede
 /homeassistant/components/plaato/ @JohNan
