@@ -2452,6 +2452,9 @@ pypck==0.9.13
 # homeassistant.components.pglab
 pypglab==0.0.5
 
+# homeassistant.components.pinergy
+pypinergy==1.2.0
+
 # homeassistant.components.pjlink
 pypjlink2==1.2.1
 

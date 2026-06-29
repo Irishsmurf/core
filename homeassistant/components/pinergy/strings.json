@@ -1,0 +1,132 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Pinergy",
+        "description": "Enter the credentials for your Pinergy account.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        },
+        "data_description": {
+          "email": "The email address you use to sign in to the Pinergy app.",
+          "password": "Your Pinergy account password."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate Pinergy",
+        "description": "The password for {email} is no longer valid. Enter your current password.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email address or password",
+      "cannot_connect": "Failed to connect to the Pinergy API",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This Pinergy account is already configured",
+      "reauth_successful": "Re-authentication was successful",
+      "unique_id_mismatch": "These credentials belong to a different Pinergy account"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Pinergy Options",
+        "data": {
+          "fetch_comparisons": "Fetch average home comparisons"
+        },
+        "data_description": {
+          "fetch_comparisons": "If disabled, the integration will not fetch 'average home' comparison data, reducing API calls."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_balance": {
+        "name": "Current balance"
+      },
+      "days_remaining": {
+        "name": "Days remaining"
+      },
+      "last_top_up_amount": {
+        "name": "Last top-up amount"
+      },
+      "today_usage": {
+        "name": "Today's usage"
+      },
+      "today_cost": {
+        "name": "Today's cost"
+      },
+      "week_usage": {
+        "name": "This week's usage"
+      },
+      "week_cost": {
+        "name": "This week's cost"
+      },
+      "month_usage": {
+        "name": "This month's usage"
+      },
+      "month_cost": {
+        "name": "This month's cost"
+      },
+      "last_reading": {
+        "name": "Last meter reading"
+      },
+      "last_top_up": {
+        "name": "Last top-up"
+      },
+      "average_home_usage": {
+        "name": "Average home usage today"
+      },
+      "average_home_cost": {
+        "name": "Average home cost today"
+      }
+    },
+    "binary_sensor": {
+      "power": {
+        "name": "Power"
+      },
+      "emergency_credit": {
+        "name": "Emergency credit"
+      },
+      "credit_low": {
+        "name": "Credit low"
+      },
+      "pending_top_up": {
+        "name": "Pending top-up"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh"
+      }
+    },
+    "event": {
+      "top_up": {
+        "name": "Top-up",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "top_up_received": "Top-up received"
+            }
+          }
+        }
+      },
+      "meter_reading": {
+        "name": "Meter reading",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "new_meter_reading": "New meter reading"
+            }
+          }
+        }
+      }
+    }
+  }
+}
