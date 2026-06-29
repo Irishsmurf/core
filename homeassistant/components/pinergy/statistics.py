@@ -13,16 +13,11 @@ import re
 from pypinergy import UsageEntry, UsageResponse
 
 from homeassistant.components.recorder import get_instance
-from homeassistant.components.recorder.models import StatisticData, StatisticMetaData
-
-try:
-    # ``mean_type`` superseded ``has_mean`` in HA 2026.11; the enum is absent on
-    # older HA (the integration targets 2025.1+), so fall back to ``has_mean``.
-    from homeassistant.components.recorder.models import StatisticMeanType
-
-    _MEAN_TYPE_KWARGS = {"mean_type": StatisticMeanType.NONE}
-except ImportError:  # pragma: no cover - exercised only on older HA
-    _MEAN_TYPE_KWARGS = {"has_mean": False}
+from homeassistant.components.recorder.models import (
+    StatisticData,
+    StatisticMeanType,
+    StatisticMetaData,
+)
 from homeassistant.components.recorder.statistics import (
     async_add_external_statistics,
     get_last_statistics,
@@ -34,11 +29,6 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-
-# ``unit_class`` became a required ``StatisticMetaData`` field in HA 2026.11
-# (omitting it logs a deprecation warning); older HA rejects the unknown key
-# when persisting the ORM row, so only emit it where the field is supported.
-_SUPPORTS_UNIT_CLASS = "unit_class" in StatisticMetaData.__annotations__
 
 
 def _statistic_id(premises_number: str, suffix: str) -> str:
@@ -52,20 +42,17 @@ def _metadata(
 ) -> StatisticMetaData:
     """Build the metadata for one external statistic series.
 
-    ``unit_class`` is required from HA 2026.11 (omitting it logs a deprecation
-    warning); energy series carry the ``energy`` unit class, monetary series
-    have no converter so it is ``None``. Older HA rejects the unknown key, so it
-    is only emitted where supported (see ``_SUPPORTS_UNIT_CLASS``).
+    Energy series carry the ``energy`` unit class; monetary series have no
+    converter, so it is ``None``.
     """
-    unit_class_kwargs = {"unit_class": unit_class} if _SUPPORTS_UNIT_CLASS else {}
     return StatisticMetaData(
         has_sum=True,
+        mean_type=StatisticMeanType.NONE,
         name=f"Pinergy {name}",
         source=DOMAIN,
         statistic_id=statistic_id,
+        unit_class=unit_class,
         unit_of_measurement=unit,
-        **unit_class_kwargs,
-        **_MEAN_TYPE_KWARGS,
     )
 
 

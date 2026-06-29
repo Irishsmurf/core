@@ -1,7 +1,7 @@
 """Tests for the Pinergy long-term statistics import."""
 
 from datetime import UTC, datetime
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from freezegun.api import FrozenDateTimeFactory
 from pypinergy import UsageResponse
@@ -10,6 +10,7 @@ import pytest
 from homeassistant.components.pinergy.const import DEFAULT_SCAN_INTERVAL, DOMAIN
 from homeassistant.components.pinergy.statistics import _metadata
 from homeassistant.components.recorder import get_instance
+from homeassistant.components.recorder.models import StatisticMeanType
 from homeassistant.components.recorder.statistics import statistics_during_period
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
@@ -134,37 +135,19 @@ async def test_statistics_skip_unavailable_days(
     assert consumption[0]["start"] == YESTERDAY_TS
 
 
-def test_metadata_builds_without_mean_type_on_older_ha() -> None:
-    """_metadata must build valid StatisticMetaData regardless of HA version.
+@pytest.mark.parametrize(
+    ("unit_class", "unit"),
+    [
+        pytest.param("energy", "kWh", id="energy"),
+        pytest.param(None, "EUR", id="monetary"),
+    ],
+)
+def test_metadata(unit_class: str | None, unit: str) -> None:
+    """Test that _metadata builds StatisticMetaData with the expected unit class."""
+    meta = _metadata("pinergy:premises", "Consumption", unit, unit_class)
 
-    Older HA (pre-StatisticMeanType) lacks the ``mean_type`` field; the module
-    must not unconditionally depend on it or it fails to import/build.
-    """
-    meta = _metadata("pinergy:premises_consumption", "Consumption", "kWh", "energy")
-
-    assert meta["statistic_id"] == "pinergy:premises_consumption"
+    assert meta["statistic_id"] == "pinergy:premises"
     assert meta["has_sum"] is True
-    assert meta["unit_of_measurement"] == "kWh"
-
-
-def test_metadata_specifies_unit_class() -> None:
-    """_metadata must specify unit_class where HA supports it (from 2026.11).
-
-    Omitting it logs a deprecation warning and stops working in HA 2026.11.
-    Energy series carry the ``energy`` unit class; monetary series have no
-    converter, so the key is present but ``None``. Older HA rejects the unknown
-    key, so it is only emitted when ``_SUPPORTS_UNIT_CLASS``.
-    """
-    module = "homeassistant.components.pinergy.statistics._SUPPORTS_UNIT_CLASS"
-
-    with patch(module, True):
-        energy = _metadata("pinergy:c", "Consumption", "kWh", "energy")
-        cost = _metadata("pinergy:m", "Cost", "EUR", None)
-        assert energy["unit_class"] == "energy"
-        assert cost["unit_class"] is None
-
-    with patch(module, False):
-        energy = _metadata("pinergy:c", "Consumption", "kWh", "energy")
-        cost = _metadata("pinergy:m", "Cost", "EUR", None)
-        assert "unit_class" not in energy
-        assert "unit_class" not in cost
+    assert meta["mean_type"] is StatisticMeanType.NONE
+    assert meta["unit_of_measurement"] == unit
+    assert meta["unit_class"] == unit_class
