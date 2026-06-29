@@ -17,20 +17,12 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.selector import (
     BooleanSelector,
-    NumberSelector,
-    NumberSelectorConfig,
-    NumberSelectorMode,
     TextSelector,
     TextSelectorConfig,
     TextSelectorType,
 )
 
-from .const import (
-    CONF_FETCH_COMPARISONS,
-    CONF_SCAN_INTERVAL,
-    DEFAULT_SCAN_INTERVAL_MINUTES,
-    DOMAIN,
-)
+from .const import CONF_FETCH_COMPARISONS, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -154,19 +146,6 @@ class PinergyOptionsFlow(OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_SCAN_INTERVAL,
-                        default=self.config_entry.options.get(
-                            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_MINUTES
-                        ),
-                    ): NumberSelector(
-                        NumberSelectorConfig(
-                            min=10,
-                            max=1440,
-                            mode=NumberSelectorMode.BOX,
-                            unit_of_measurement="minutes",
-                        )
-                    ),
                     vol.Required(
                         CONF_FETCH_COMPARISONS,
                         default=self.config_entry.options.get(

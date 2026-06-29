@@ -220,13 +220,11 @@ async def test_options_flow(
     result = await hass.config_entries.options.async_configure(
         result["flow_id"],
         user_input={
-            "scan_interval": 15,
             "fetch_comparisons": False,
         },
     )
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.options == {
-        "scan_interval": 15,
         "fetch_comparisons": False,
     }
